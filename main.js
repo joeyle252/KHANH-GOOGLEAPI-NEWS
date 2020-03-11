@@ -2,7 +2,7 @@
 let newsList = [];
 let callAPI = async () => {
     let apiKey = 'fd0ab51d4e2b4838bf61e1a790dacdb7'
-    let url = `http://newsapi.org/v2/everything?q=vietnam&apiKey=${apiKey}`
+    let url = `https://newsapi.org/v2/everything?q=vietnam&apiKey=${apiKey}`
 
     let data = await fetch(url);
     let result = await data.json();
