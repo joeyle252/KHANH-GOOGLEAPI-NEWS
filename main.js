@@ -1,8 +1,15 @@
 
 let newsList = [];
+let page = 1;
+let moreButton = document.querySelector(".moreButton");
+moreButton.addEventListener("click", () => {
+    page = page + 1;
+    callAPI();
+});
+
 let callAPI = async () => {
     let apiKey = 'fd0ab51d4e2b4838bf61e1a790dacdb7'
-    let url = `https://newsapi.org/v2/everything?q=vietnam&apiKey=${apiKey}`
+    let url = `https://newsapi.org/v2/everything?page=${page}&pageSize=20&q=vietnam&apiKey=${apiKey}`
 
     let data = await fetch(url);
     let result = await data.json();
@@ -14,22 +21,31 @@ let callAPI = async () => {
 
     render(newsList);
 }
+
+const ArticleCount = (articles) => {
+    document.getElementById("numberOfArticles").innerHTML = `${articles.length} of ${newsArticles.length}`;
+}
+
 let render = (array) => {
     let htmlForNews = array.map(item => {
         return ` 
-        <div id="news" style="display: flex; border: 1px solid grey;"> 
-        <img style="width:200px; border: 2px solid black;"    
-        src="${item.urlToImage}"> 
-        <div>
-        <h2> ${item.title} </h2>
-        <p> ${item.content} </p>
-        <div> ${item.publishedAt}</div>
-        <div> ${item.author} </div> 
-        </div>
-        </div>
+        <div id="newsArea">
+            <div id="news" style="display: flex;"> 
+                <img style="width:250px;" src="${item.urlToImage}">
+                <div>
+                     <a href=${item.url}> ${item.title} </a>
+                    <p> ${item.content} </p>
+                    <div> ${item.publishedAt}</div>
+                    <div> ${item.author} </div> 
+                </div>
+            </div>
+         </div>
         `
     }).join('')
-    document.getElementById('newsArea').innerHTML = htmlForNews;
-
+    const newsDiv = document.createElement("div");
+    newsDiv.innerHTML = htmlForNews;
+    document.getElementById('newsArea').appendChild(newsDiv); 
 };
 callAPI();
+
+

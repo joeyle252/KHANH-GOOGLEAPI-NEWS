@@ -1,0 +1,32 @@
+
+.navbar-brand{
+    margin-left: 5%;
+}
+.google-title {
+    margin-left: 30%;
+    margin-top: 2%;
+    font-size: 60px;
+}
+#newsArea {
+    /* border: 1px solid black; */
+    margin: 2% 10% 2% 10%;
+}
+#news > img {
+    padding: 2%;
+}
+.moreButton {
+    height: 50px;
+    width: 100px;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-top: 5%;
+    margin-left: 50%;
+    background-color: black;
+    color: white; 
+    border: none;
+}
+.moreButton:hover {
+    background-color: white;
+    color: black;
+    border: none;
+}
