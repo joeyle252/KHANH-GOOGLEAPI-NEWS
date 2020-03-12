@@ -1,4 +1,7 @@
 
+body {
+    background-color: wheat;
+}
 .navbar-brand{
     margin-left: 5%;
 }
