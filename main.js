@@ -13,7 +13,6 @@ moreButton.addEventListener("click", () => {
 });
 
 
-
 let callAPI = async () => {
     if (page > 4) {
         return;
@@ -24,41 +23,59 @@ let callAPI = async () => {
     let data = await fetch(url);
     let result = await data.json();
 
-    let newsList = result.articles;
-
-    console.log("data", data);
-    console.log("json", result);
-
+    newsList = newsList.concat(result.articles);
+    searchBySource();
     render(newsList);
 }
 
 let searchBySource = () => {
     let sourceNames = newsList.map((item) => item.source.name)
-    console.log("source", source);
-    let sourceObJect = sourceNames.reduce((total, name) => {
+    let sourceObject = sourceNames.reduce((total, name) => {
         if (name in total) {
             total[name]++
         } else {
             total[name] = 1
         }
         return total;
-    }, {})
+    }, {});
 
     let sourceArray = Object.keys(sourceObject);
-
-    let htmlForSource = sourceArray.map((item) => `<input onchange='sourceClicked(${item}') type="checkbox" id="${item}"/> ${item} (${sourceObject[item]})`)
+    let selectedSources = [];
+    let htmlForSource = sourceArray.map((item, index) => `<input type="checkbox" class="source-checkbox" id="${index}"/> ${item} (${sourceObject[item]})`);
     document.getElementById('sourceArea').innerHTML = htmlForSource;
-
+    document.querySelectorAll("input.source-checkbox").forEach((item, index) => {
+        item.addEventListener("change", () => {
+            let index = item.id;
+            const source = sourceArray[index];
+            if (item.checked === true) {
+                selectedSources.push(source);
+            } else {
+                selectedSources.splice(index, 1); 
+            }
+            const filteredNews = newsList.filter(article => {
+                if (selectedSources.includes(article.source.name)) {
+                    return true;
+                }
+            })
+            render(filteredNews)
+        })
+    })
 }
+// it not working, still have to check what happen?
+// let sourceArray = Object.keys(sourceObject);
+// debugger;
+//     let htmlForSource = sourceArray.map((item,index) => `<input onchange='sourceClicked(${item})' type="checkbox" id="${item}"/> ${item} (${sourceObject[item]})`)
+//     document.getElementById('sourceArea').innerHTML = htmlForSource;
 
-let sourceClicked = index => {
-    if (document.getElementById(index).checked == true) {
-        let filteredNews = newsList.filter(item => item.source.name === index);
-        render(filteredNews);
-    } else {
-        render(newsList);
-    }
-};
+// let sourceClicked = (index => {
+//     // debugger;
+//     if (document.getElementById(index).checked === true) {
+//         let filteredNews = newsList.filter((item)=> item.source.name === index);
+//         render(filteredNews);   
+//     } else {
+//         render(newsList);
+//     }
+// });
 
 let searchByCategory = async () => {
     shouldReplaceAllArticles = true;
@@ -70,6 +87,7 @@ let searchByCategory = async () => {
     newsList = result.articles;
     render(newsList);
 }
+
 
 let render = (array) => {
     let htmlForNews = array.map(item => {
@@ -87,13 +105,13 @@ let render = (array) => {
          </div>
         `
     }).join('')
-    if(shouldReplaceAllArticles === true){
-        document.getElementById('newsArea').innerHTML=htmlForNews; 
-    }else {
-        const newsDiv = document.createElement("div");
-        newsDiv.innerHTML = htmlForNews;
+    if (shouldReplaceAllArticles === true) {
+        document.getElementById('newsArea ').innerHTML = htmlForNews; 
+    }else {      
+         const newsDiv = document.createElement("div");
+          newsDiv.innerHTML = htmlForNews;
         document.getElementById('newsArea').appendChild(newsDiv); 
-    }
+        
     
 };
 callAPI();
