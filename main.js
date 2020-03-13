@@ -50,7 +50,8 @@ let searchBySource = () => {
             if (item.checked === true) {
                 selectedSources.push(source);
             } else {
-                selectedSources.splice(index, 1); 
+                var idx = selectedSources.indexOf(source);
+                if (idx !== -1) selectedSources.splice(index, 1); 
             }
             const filteredNews = newsList.filter(article => {
                 if (selectedSources.includes(article.source.name)) {
@@ -106,14 +107,12 @@ let render = (array) => {
         `
     }).join('')
     if (shouldReplaceAllArticles === true) {
-        document.getElementById('newsArea ').innerHTML = htmlForNews; 
+        document.getElementById('newsArea').innerHTML = htmlForNews; 
     }else {      
          const newsDiv = document.createElement("div");
           newsDiv.innerHTML = htmlForNews;
         document.getElementById('newsArea').appendChild(newsDiv); 
-        
+    }   
     
 };
 callAPI();
-
-
